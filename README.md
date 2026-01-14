@@ -1,4 +1,3 @@
-Thought for 1s```markdown
 # Neovim Configuration
 
 A modern, minimal Neovim configuration with lazy.nvim plugin manager and Tokyo Night theme.
