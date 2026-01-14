@@ -2,12 +2,11 @@ return {
   "neovim/nvim-lspconfig",
   config = function()
     --------------------------------------------------
-    -- Capacidades (para nvim-cmp si lo usas)
     --------------------------------------------------
     local capabilities = vim.lsp.protocol.make_client_capabilities()
 
     --------------------------------------------------
-    -- Keymaps LSP (API moderna)
+    -- Keymaps LSP (modern API)
     --------------------------------------------------
     vim.api.nvim_create_autocmd("LspAttach", {
       callback = function(ev)
@@ -57,7 +56,7 @@ return {
     }
 
     --------------------------------------------------
-    -- Activar servidores
+    -- Activate servers
     --------------------------------------------------
     vim.lsp.enable({
       "clangd",
