@@ -29,6 +29,7 @@ return {
   vim.keymap.set("n", "<leader>fe", ":Vexplore<CR>", { desc = "File Explorer vertical" }),
   vim.keymap.set("n", "<leader>h", "gT", { noremap = true, silent = true }), -- previous tab
   vim.keymap.set("n", "<leader>l", "gt", { noremap = true, silent = true }), -- next tab
+  vim.keymap.set("n", "<leader>nh", ":noh <CR>", { noremap = true, silent = true }), -- not highlight
 
   vim.keymap.set("n", "<leader>f", function()
     vim.lsp.buf.format()

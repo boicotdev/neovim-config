@@ -11,13 +11,12 @@
 -- Must be set before loading plugins for proper keybinding mappings
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-
 -- =============================================================================
 -- GLOBAL FLAGS
 -- =============================================================================
 vim.g.have_nerd_font = false          -- Enable Nerd Font icons support
 vim.g.deprecation_warnings = true    -- Show deprecation warnings for debugging
-
+vim.g.editorconfig = true
 -- =============================================================================
 -- ENCODING
 -- =============================================================================
@@ -40,7 +39,7 @@ vim.opt.cursorline = true -- Show which line your cursor is on
 -- USER INTERFACE
 -- =============================================================================
 vim.opt.title = true                 -- Set window title to current file
-vim.opt.showmode = false             -- Hide mode indicator (shown in statusline)
+vim.opt.showmode = true             -- Hide mode indicator (shown in statusline)
 vim.opt.showcmd = true               -- Show partial commands in last line
 vim.opt.cmdheight = 1                -- Command line height (overridden below for 0.8+)
 vim.opt.laststatus = 2               -- Always show statusline
@@ -66,7 +65,6 @@ vim.opt.expandtab = true             -- Convert tabs to spaces
 vim.opt.tabstop = 2                  -- Number of spaces per tab character
 vim.opt.shiftwidth = 2               -- Number of spaces for autoindent
 vim.opt.softtabstop = 2              -- Number of spaces per Tab keypress
-
 -- =============================================================================
 -- TEXT BEHAVIOR
 -- =============================================================================
@@ -159,54 +157,64 @@ vim.g.netrw_liststyle = 3    -- View type tree
 vim.g.netrw_browse_split = 0
 vim.g.netrw_winsize = 25
 
-  vim.opt.completeopt = { "menu", "menuone", "noselect" }
+vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 
-  vim.api.nvim_create_autocmd("InsertCharPre", {
-    callback = function()
-      -- Do nothing if a menu is already
-      if vim.fn.pumvisible() == 1 then return end
+vim.api.nvim_create_autocmd("InsertCharPre", {
+  callback = function()
+    -- Do nothing if a menu is already
+    if vim.fn.pumvisible() == 1 then return end
 
-      -- Only if omnifunc exists. 
-      local omnifunc = vim.bo.omnifunc
-      if omnifunc == nil or omnifunc == "" then return end
+    -- Only if omnifunc exists. 
+    local omnifunc = vim.bo.omnifunc
+    if omnifunc == nil or omnifunc == "" then return end
 
-      vim.api.nvim_feedkeys(
-        vim.api.nvim_replace_termcodes("<C-x><C-o>", true, false, true),
-        "n",
-        false
-      )
-    end,
-  })
+    vim.api.nvim_feedkeys(
+      vim.api.nvim_replace_termcodes("<C-x><C-o>", true, false, true),
+      "n",
+      false
+    )
+  end,
+})
 
-  -- 
-  vim.api.nvim_create_autocmd("LspAttach", {
-    callback = function(args)
-      local buf = args.buf
+-- 
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local buf = args.buf
 
-      local map = function(mode, lhs, rhs, desc)
-        vim.keymap.set(mode, lhs, rhs, { buffer = buf, desc = desc })
-      end
+    local map = function(mode, lhs, rhs, desc)
+      vim.keymap.set(mode, lhs, rhs, { buffer = buf, desc = desc })
+    end
 
-      map("n", "gd", vim.lsp.buf.definition, "Go to definition")
-      map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
-      map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
-      map("n", "gr", vim.lsp.buf.references, "Go to references")
-      map("n", "K",  vim.lsp.buf.hover, "Hover documentation")
-    end,
-  })
-
+    map("n", "gd", vim.lsp.buf.definition, "Go to definition")
+    map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
+    map("n", "gi", vim.lsp.buf.implementation, "Go to implementation")
+    map("n", "gr", vim.lsp.buf.references, "Go to references")
+    map("n", "K",  vim.lsp.buf.hover, "Hover documentation")
+  end,
+})
+vim.keymap.set("n", "<leader>R", function()
+  vim.cmd("source $MYVIMRC")
+  vim.cmd("LspRestart")
+  print("Neovim recargado")
+end, { desc = "Reload Neovim" })
 
 vim.keymap.set("i", "<C-y>", function()
   if vim.fn.pumvisible() == 1 then
     return vim.fn["complete_info"]().selected ~= -1
-      and vim.api.nvim_replace_termcodes("<C-y>", true, false, true)
-      or vim.api.nvim_replace_termcodes("<C-n><C-y>", true, false, true)
+    and vim.api.nvim_replace_termcodes("<C-y>", true, false, true)
+    or vim.api.nvim_replace_termcodes("<C-n><C-y>", true, false, true)
   end
   return vim.api.nvim_replace_termcodes("<CR>", true, false, true)
 end, { expr = true, silent = true })
 
-  require('config.keymaps')
-  require('config.diagnostics')
-
-  vim.lsp.enable({'clangd', 'rust_analyzer', 'prettier', 'pyright'})
+require('config.keymaps')
+require('config.diagnostics')
+vim.lsp.enable({
+    'clangd',
+    'rust_analyzer',
+    'prettier',
+    'pyright',
+    'lua_server',
+    'typescriptjs'
+  })

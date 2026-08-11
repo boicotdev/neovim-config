@@ -4,7 +4,7 @@ return {
   root_markers = { 'Cargo.toml', '.git' },
   settings = {
     ['rust-analyzer'] = {
-      check = { command = 'clippy' }, -- Ejemplo: usa clippy en lugar de check
+      check = { command = 'clippy' },
       inlayHints = {
         bindingModeHints = { enable = true },
         closureReturnTypeHints = { enable = "always" },

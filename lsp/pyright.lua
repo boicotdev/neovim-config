@@ -18,7 +18,6 @@ return {
         useLibraryCodeForTypes = true,
         diagnosticMode = "workspace",
 
-        -- Buen balance entre señal y ruido
         reportMissingImports = true,
         reportMissingTypeStubs = false,
       },
